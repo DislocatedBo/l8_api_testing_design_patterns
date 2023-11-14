@@ -39,4 +39,27 @@ export const getTotal = (items = [], discount = 0) => {
     return acc + item.price * item.quantity;
   }, 0);
   return total - (total * discount) / 100;
+
+  /** Функция getScore:
+  * Принимает на вход объект, в котором ключ это ник, а значение это успеваемость.
+  * Возвращает в ответ сумму всех баллов. 
+  * @constructor
+  * @type {Object.<string, number>}
+  */
+
+  const scores = {
+    Anna: 10,
+    Olga: 1,
+    Ivan: 5,
+  }
+
+  const getScore = (scores) => {
+    let sum = 0
+    for (let key in scores) {
+      sum += scores[key]
+    }
+    return sum
+  }
+getScore(scores)
+
 };
