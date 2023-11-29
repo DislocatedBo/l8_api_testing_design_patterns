@@ -1,10 +1,10 @@
 const config = {
     url: 'https://bookstore.demoqa.com', // base url
     credentials: {
-        userName: 'Tname2',
+        userName: 'Tname5',
         password: 'Londo3@@'
     },
-    userID: 'dc21c96b-fe84-4661-aebb-5c959df31f69'
+    userID: '1a0dc99d-b439-4f2f-9552-ab0032075214'
 }
 
 export default config

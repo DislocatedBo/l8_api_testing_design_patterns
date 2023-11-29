@@ -1,8 +1,6 @@
 import supertest from "supertest"
 import config from "../../config"
 const { url } = config
-
-
 /* eslint-disable */
 
 //Контроллер User
@@ -23,7 +21,6 @@ const user = {
 
     //Get user
     async getUser(uuid) {
-        //console.log("getUser " + user.token)
         const res = await supertest(url)
             .get(`/Account/v1/User/${uuid}`)
             .set('accept', 'application/json')
@@ -39,28 +36,31 @@ const user = {
         return res.body
     },
 
+
     //Функция получения токена
-    getToken: () => {
+
+    getToken: (payload) => {
         return supertest(url)
             .post('/Account/v1/GenerateToken')
             .set('accept', 'application/json')
-            .set('Content-Type', 'application/json')
-            .send(config.credentials)
+            .send(payload)
     },
 
     async getAuthToken() {
-        const res = await this.getToken(config.credentials)
+        const payload = config.credentials
+        const res = await this.getToken(payload)
         user.token = res.body.token
         return res.body.token
     },
 
     //Функция авторизации с полученным токеном
+
     authorization: (payload) => {
         return supertest(url)
-            .post('/Account/v1/Authorized')
-            .set('accept', 'application/json')
-            .set('authorization', `Bearer ${user.token}`)
-            .send(payload)
+        .post('/Account/v1/Authorized')
+        .set('accept', 'application/json')
+        .set('authorization', `Bearer ${user.token}`)
+        .send(payload)
     }
 }
 export default user

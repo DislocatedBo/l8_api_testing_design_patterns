@@ -11,27 +11,39 @@
 
 /* eslint-disable */
 import supertest from "supertest"
-import config from "../config"
-import user from "./helper/user"
-import books from "./helper/books"
+import config from "../../config"
+import user from "../helper/user"
+import login from "./login"
+
+describe('login', () => {
+    //Успешный логин в систему
+
+    it.only('Login was succesfull', async () => {
+        const response = await login.userLogin(login.payload)
+        expect(response.status).toBe(415)
+    })
+})
+
+
 
 describe('user', () => {
 
     //Успешная генерация токена
     it('Token successfully generated', async () => {
-        const response = await user.getToken()
+        const response = await user.getAuthToken()
         expect(response.status).toBe(200)
-        expect(response.body.token).toBeDefined()
-        expect(response.body.expires).toBeDefined()
-        expect(response.body.status).toBe('Success')
-        expect(response.body.result).toBe('User authorized successfully.')
+        const data = await response.json()
+        expect(data.token).toBeDefined()
+        expect(data.expires).toBeDefined()
+        expect(data.status).toBe('Success')
+        expect(data.result).toBe('User authorized successfully.')
     })
 
     //Успешное получение информации о пользователе
     it('getUser', async () => {
         await user.getAuthToken()
         const response = await user.getUser(config.userID)
-        expect(response.status).toBe(200)
+        expect(response.status).toBe(201)
         expect(data.userID).toBeDefined()
         expect(data.username).toBe('Tname2')
         expect(data.books).toEqual([])
@@ -43,18 +55,5 @@ describe('user', () => {
         expect(response.status).toBe(200)
         expect(response.body).toEqual({})
     })
-
-//Успешное создание книги 
-
-it.only('12313213', async () => {
-    const response = await books.createBook()
-    console.log(response.body)
-    expect(response.status).toBe(200)
-    expect(response.body.token).toBeDefined()
-    expect(response.body.expires).toBeDefined()
-    expect(response.body.status).toBe('Success')
-    expect(response.body.result).toBe('User authorized successfully.')
-})
-
 
 })

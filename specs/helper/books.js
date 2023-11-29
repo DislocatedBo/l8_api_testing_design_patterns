@@ -1,23 +1,37 @@
 import supertest from "supertest"
 import config from "../../config"
+import user from "../helper/user"
 const { url } = config
 
 
 /* eslint-disable */
 
-//Контроллер User
+//Контроллер BookStore
 
-const user = {
+const bookPayload = {
+    "userId": config.userID,
+    "collectionOfIsbns": [
+        {
+            "isbn": "Testbook1"
+        }
+    ]
+}
+
+const books = {
     //
     token: '',
 
-    //Create user
+    //Create book
 
-    async createUser(payload) {
+    async createBook() {
+        const response = await user.getAuthToken()
+        //console.log(response)
         const res = await supertest(url)
-            .post('/Account/v1/User')
+            .post('/BookStore/v1/Books')
             .set('accept', 'application/json')
-            .send(payload)
+            .set('Content-Type', 'application/json')
+            .set('Authorization', response)
+            .send(bookPayload)
         return res
     },
 
@@ -63,4 +77,4 @@ const user = {
             .send(payload)
     }
 }
-export default user
+export default books
