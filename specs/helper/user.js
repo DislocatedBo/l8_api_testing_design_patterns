@@ -7,49 +7,69 @@ const { url } = config
 
 //Контроллер User
 
+const credentialsload = {
+    "userName": config.credentials.userName,
+    "password": config.credentials.password
+}
+
 const user = {
     //
     token: '',
 
-    //Create user
+    async gencreduserpass(userbase) {
+        const createuser ={
+            "userName": userbase + parseInt(Math.random() * 100000),
+            "password": "P@ss12312"
+        }
+        return createuser
+    },
 
-    async createUser(payload) {
+    async loginuser() {
+        const res = await supertest(url)
+            .post('/Account/v1/Authorized')
+            .set('accept', 'application/json')
+            .send(credentialsload)
+        return res
+    },
+
+    async createUser(loadcreat) {
         const res = await supertest(url)
             .post('/Account/v1/User')
             .set('accept', 'application/json')
-            .send(payload)
+            .send(loadcreat)
         return res
     },
 
     //Get user
-    async getUser(uuid) {
+    async getUser(uuid, token) {
         //console.log("getUser " + user.token)
         const res = await supertest(url)
             .get(`/Account/v1/User/${uuid}`)
             .set('accept', 'application/json')
-            .set('Authorization', `Bearer ${this.token}`)
+            .set('Authorization', 'Bearer ' + await user.getAuthToken(token))
         return res
     },
 
     //Delete user
-    async deleteUser(uuid) {
+    async deleteUser(uuid, token) {
         const res = await supertest(url)
             .delete(`/Account/v1/User/${uuid}`)
             .set('accept', 'application/json')
-        return res.body
+            .set('Authorization', 'Bearer ' + await user.getAuthToken(token))
+        return res
     },
 
     //Функция получения токена
-    getToken: () => {
+    getToken: (cred) => {
         return supertest(url)
             .post('/Account/v1/GenerateToken')
             .set('accept', 'application/json')
             .set('Content-Type', 'application/json')
-            .send(config.credentials)
+            .send(cred)
     },
 
-    async getAuthToken() {
-        const res = await this.getToken(config.credentials)
+    async getAuthToken(cred) {
+        const res = await this.getToken(cred)
         user.token = res.body.token
         return res.body.token
     },

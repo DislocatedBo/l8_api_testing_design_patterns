@@ -1,6 +1,6 @@
 import supertest from "supertest"
 import config from "../../config"
-import user from "../helper/user"
+import user from "./user"
 const { url } = config
 
 
@@ -8,73 +8,55 @@ const { url } = config
 
 //Контроллер BookStore
 
+//payload
+
 const bookPayload = {
     "userId": config.userID,
     "collectionOfIsbns": [
         {
-            "isbn": "Testbook1"
+            "isbn": config.isbn
         }
     ]
 }
 
+const bookPayloaddel = {
+    "userId": config.userID,
+    "isbn": config.isbn
+}
+
+//request
+
 const books = {
-    //
-    token: '',
-
-    //Create book
-
     async createBook() {
-        const response = await user.getAuthToken()
-        //console.log(response)
         const res = await supertest(url)
             .post('/BookStore/v1/Books')
             .set('accept', 'application/json')
             .set('Content-Type', 'application/json')
-            .set('Authorization', response)
+            .set('Authorization', 'Bearer ' + await user.getAuthToken(config.credentials))
             .send(bookPayload)
         return res
     },
-
-    //Get user
-    async getUser(uuid) {
-        //console.log("getUser " + user.token)
+    async deleteBook() {
         const res = await supertest(url)
-            .get(`/Account/v1/User/${uuid}`)
+            .delete(`/BookStore/v1/Book`)
             .set('accept', 'application/json')
-            .set('Authorization', `Bearer ${this.token}`)
+            .set('Authorization', 'Bearer ' + await user.getAuthToken(config.credentials))
+            .send(bookPayloaddel)
         return res
     },
-
-    //Delete user
-    async deleteUser(uuid) {
+    async updateBook(isbn) {
         const res = await supertest(url)
-            .delete(`/Account/v1/User/${uuid}`)
+            .put(`/BookStore/v1/Books/` + isbn)
             .set('accept', 'application/json')
-        return res.body
+            .set('Authorization', 'Bearer ' + await user.getAuthToken(config.credentials))
+            .send(bookPayloaddel)
+        return res
     },
-
-    //Функция получения токена
-    getToken: () => {
-        return supertest(url)
-            .post('/Account/v1/GenerateToken')
-            .set('accept', 'application/json')
-            .set('Content-Type', 'application/json')
-            .send(config.credentials)
-    },
-
-    async getAuthToken() {
-        const res = await this.getToken(config.credentials)
-        user.token = res.body.token
-        return res.body.token
-    },
-
-    //Функция авторизации с полученным токеном
-    authorization: (payload) => {
-        return supertest(url)
-            .post('/Account/v1/Authorized')
-            .set('accept', 'application/json')
-            .set('authorization', `Bearer ${user.token}`)
-            .send(payload)
+    async getBook(isbn) {
+        const res = await supertest(url)
+            .get(`/BookStore/v1/Book?ISBN=` + isbn)
+            .set('Authorization', 'Bearer ' + await user.getAuthToken(config.credentials))
+        return res
     }
 }
 export default books
