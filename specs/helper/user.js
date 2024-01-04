@@ -68,8 +68,8 @@ const user = {
             .send(cred)
     },
 
-    async getAuthToken(cred) {
-        const res = await this.getToken(cred)
+    async getAuthToken(credentialsload) {
+        const res = await this.getToken(credentialsload)
         user.token = res.body.token
         return res.body.token
     },

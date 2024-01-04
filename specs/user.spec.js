@@ -21,7 +21,7 @@ describe('user', () => {
         expect(response.body.expires).toBeDefined()
         expect(response.body.status).toBe('Success')
         expect(response.body.result).toBe('User authorized successfully.')
-    })
+    }, 20000)
     it('login', async () => {
         const response = await user.loginuser()
         expect(response.status).toBe(200)

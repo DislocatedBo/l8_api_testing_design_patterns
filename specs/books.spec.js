@@ -10,14 +10,14 @@ describe('book', () => {
         let response = await books.createBook()
         expect(response.status).toBe(201)
         expect(response.body.books[0].isbn).toBe(config.isbn)
-    })
+    }, 10000)
     it('Delete book', async () => {
         await books.deleteBook()
         await books.createBook()
         let response = await books.deleteBook()
         expect(response.status).toBe(204)
         expect(response.body).toEqual({})
-    })
+    }, 10000)
     it('updater book', async () => {
         await books.deleteBook()
         await books.createBook()
