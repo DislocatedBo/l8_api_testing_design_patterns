@@ -37,17 +37,6 @@ jobs:
         if-no-files-found: error
         path: ./jest-html-report
 
-    - name: Run tests coverage
-      run: npm run test:coverage
-      continue-on-error: true
-
-    - name: Upload coverage
-      uses: actions/upload-artifact@v3
-      with:
-        name: coverage
-        if-no-files-found: error
-        path: ./coverage
-
     - name: send telegram message on push
       uses: appleboy/telegram-action@master
       with:
