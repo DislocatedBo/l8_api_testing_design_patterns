@@ -1,7 +1,7 @@
 import supertest from "supertest"
 import config from "../../config"
 import user from "./user"
-const { url } = config
+const url = config.url
 
 
 /* eslint-disable */
