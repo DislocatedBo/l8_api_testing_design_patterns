@@ -53,7 +53,7 @@ jobs:
           See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
 
     - name: Upload artifact
-      uses: actions/upload-pages-artifact@v4
+      uses: actions/upload-pages-artifact@v3
       with:
         path: './jest-html-report'
 
